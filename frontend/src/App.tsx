@@ -1,12 +1,14 @@
 import "./App.css";
-import React, { useState, FormEvent, useRef} from "react";
+import React, { useState, FormEvent, useRef } from "react";
 
 import * as api from "./API";
 import { Recipe } from "./types";
 import RecipeCard from "./components/RecipeCard";
+import RecipeModal from "./components/RecipeModal";
 
-function App() {
+const App: React.FC = () => { 
 
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
@@ -45,28 +47,28 @@ function App() {
   const handleViewMoreClick = async () => {
 
     try {
-  
+
       const nextPage = pageNumber.current + 1;
-  
+
       const nextRecipes = await api.searchRecipes(searchTerm, nextPage);
-  
+
       setRecipes((prevRecipes) => [...prevRecipes, ...nextRecipes.results]);
-  
+
       pageNumber.current = nextPage;
-  
+
     } catch (error) {
-  
+
       console.error(error);
-  
+
     }
-  
+
   };
 
   const pageNumber = useRef(1);
 
   return (
 
-    <div>
+    <div className="App">
 
       <form onSubmit={handleSearchSubmit}>
 
@@ -88,11 +90,26 @@ function App() {
 
       ))}
 
-      <button className="view-more" onClick={handleViewMoreClick}> 
+      <button className="view-more" onClick={handleViewMoreClick}>
 
-      Ver mais 
+        Ver mais
 
       </button>
+
+
+
+
+      {selectedRecipe && (
+
+        <RecipeModal
+
+          recipeId={selectedRecipe.id.toString()}
+
+          onClose={() => setSelectedRecipe(undefined)}
+
+        />
+
+      )}
 
     </div>
 

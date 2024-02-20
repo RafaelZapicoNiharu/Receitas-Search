@@ -28,8 +28,20 @@ app.get("/api/recipe/search", async (req, res) => {
   
 });
 
+
+app.get("/api/recipe/:recipeId/summary", async (req, res) => {
+
+    const recipeId = req.params.recipeId;
+  
+    const result = await recipeAPI.getRecipeSummary(recipeId);
+  
+    res.json(result);
+  
+  });
+
 app.listen(5000, () => {
 
     console.log("Server rodando na porta 5000");
   
 });
+
