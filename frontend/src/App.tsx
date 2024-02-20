@@ -1,6 +1,7 @@
 import "./App.css";
-import React, { useState, FormEvent } from "react";
-import searchRecipes from "./API";
+import React, { useState, FormEvent, useRef} from "react";
+
+import * as api from "./API";
 import { Recipe } from "./types";
 import RecipeCard from "./components/RecipeCard";
 
@@ -31,6 +32,8 @@ function App() {
 
       setRecipes(data.results);
 
+      pageNumber.current = 1;
+
     } catch (error) {
 
       console.error(error);
@@ -38,6 +41,28 @@ function App() {
     }
 
   };
+
+  const handleViewMoreClick = async () => {
+
+    try {
+  
+      const nextPage = pageNumber.current + 1;
+  
+      const nextRecipes = await api.searchRecipes(searchTerm, nextPage);
+  
+      setRecipes((prevRecipes) => [...prevRecipes, ...nextRecipes.results]);
+  
+      pageNumber.current = nextPage;
+  
+    } catch (error) {
+  
+      console.error(error);
+  
+    }
+  
+  };
+
+  const pageNumber = useRef(1);
 
   return (
 
@@ -62,6 +87,12 @@ function App() {
         <RecipeCard key={recipe.id} recipe={recipe} />
 
       ))}
+
+      <button className="view-more" onClick={handleViewMoreClick}> 
+
+      Ver mais 
+
+      </button>
 
     </div>
 

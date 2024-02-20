@@ -1,7 +1,7 @@
 
 
 
-const searchRecipes = async (searchTerm: string, page: number) => {
+export const searchRecipes = async (searchTerm: string, page: number) => {
 
     const baseURL = new URL("http://localhost:5000/api/recipes/search");
   
@@ -21,4 +21,3 @@ const searchRecipes = async (searchTerm: string, page: number) => {
   
   };
 
-  export default searchRecipes
